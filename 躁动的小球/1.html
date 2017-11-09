@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>1</title>
+	<style>
+		*{
+			margin: 0;
+			padding: 0;
+		}
+		#box{
+			width: 500px;
+			height: 500px;
+			position: relative;
+			border: 1px solid red;
+			margin: 50px auto;
+		}
+		.ball{
+			position: absolute;
+			border-radius: 50%;
+		}
+	</style>
+</head>
+<body>
+	<div id="box"></div>
+
+
+	<script>
+		var box=document.getElementById('box');
+		//创建小球类(构造函数)
+		function Ball(){
+			this.ele=document.createElement('div');//创建一个div
+			this.ele.className='ball';
+			this.w=rand(10,50)
+			this.x=rand(0,500-this.w)
+			this.y=rand(0,500-this.w)
+			this.bg='rgba('+rand(0,255)+','+rand(0,255)+','+rand(0,255)+',0.8)';
+			var speedX=rand(1,10);
+			var speedY=rand(1,10);
+			this.speedX=rand(1,2)==1?speedX:-speedX;//随机速度的方向
+			this.speedY=rand(1,2)==1?speedY:-speedY;
+			this.ele.style.background=this.bg;
+			this.ele.style.width=this.w+'px';
+			this.ele.style.height=this.w+'px';
+
+
+			box.appendChild(this.ele);
+
+		}
+		//在原型上添加移动的方法
+		Ball.prototype.move=function(){
+			this.x+=this.speedX;
+			this.y+=this.speedY;
+			if(this.x>box.clientWidth-this.w){
+				this.x=box.clientWidth-this.w;
+				this.speedX*=-1;
+			}
+			if(this.x<=0){
+				this.x=0;
+				this.speedX*=-1;
+			}
+			if(this.y>=box.clientHeight-this.w){
+				this.y=box.clientHeight-this.w;
+				this.speedY*=-1;
+			}
+			if(this.y<=0){
+				this.y=0;
+				this.speedY*=-1;
+			}
+			this.ele.style.left=this.x+'px';
+			this.ele.style.top=this.y+'px';
+
+		}
+
+
+		var arr=[];//存放实例化出的所有对象
+		// for 循环实例化小球对象
+		for(var i=0;i<100;i++){
+			var ball=new Ball();
+			arr.push(ball);//将实例化的对象放进数组
+
+		}
+
+		function rand(min,max){
+			return parseInt(Math.random()*(max-min+1)+min);
+		}
+
+		setInterval(function(){
+			for(var i=0;i<arr.length;i++){
+				arr[i].move();
+			}
+		},10)
+
+	</script>
+</body>
+</html>
